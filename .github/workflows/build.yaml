@@ -1,0 +1,35 @@
+name: Build Android App
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      FLAVOR: prod
+      BUILD_TYPE: debug
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: adopt
+          java-version: 17
+          cache: gradle
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      - name: Build With Gradle
+        run: |
+          ./gradlew assembleProdDebug
+
+      # アーティファクトとして保存
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-${{ env.FLAVOR }}-${{ env.BUILD_TYPE }}.apk
+          path: app/build/outputs/apk/${{ env.FLAVOR }}/${{ env.BUILD_TYPE }}/app-${{ env.FLAVOR }}-${{ env.BUILD_TYPE }}.apk
