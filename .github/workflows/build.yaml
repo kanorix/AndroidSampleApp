@@ -24,8 +24,10 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
       - name: Build With Gradle
+        # 環境変数からTask名を組み立てる（キャメルケースでassembleProdDebugのようになる）
         run: |
-          ./gradlew assembleProdDebug
+          task=$(echo "assemble_$FLAVOR_$BUILD_TYPE" | sed -r 's/(_)(.)/\u\2/g')
+          ./gradlew $task
 
       # アーティファクトとして保存
       - name: Upload artifact
