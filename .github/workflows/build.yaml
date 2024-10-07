@@ -38,7 +38,7 @@ jobs:
         run: |
           properties_file="./${FLAVOR}.properties"
           echo Setup "$properties_file"
-          echo $MAPS_API_KEY >> $properties_file
+          echo MAPS_API_KEY=$MAPS_API_KEY >> $properties_file
 
       - name: Build With Gradle
         # 環境変数からTask名を組み立てる（キャメルケースでassembleProdDebugのようになる）
