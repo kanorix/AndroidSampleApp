@@ -1,8 +1,16 @@
 name: Build Android App
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: "Debug or Release"
+        required: true
+        default: "Release"
+        type: choice
+        options:
+          - Release
+          - Debug
 
 permissions:
   contents: write
@@ -12,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       FLAVOR: prod
-      BUILD_TYPE: debug
+      BUILD_TYPE: ${{ inputs.build_type }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
