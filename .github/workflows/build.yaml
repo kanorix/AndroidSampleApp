@@ -42,7 +42,7 @@ jobs:
       - name: Build With Gradle
         # 環境変数からTask名を組み立てる（キャメルケースでassembleProdDebugのようになる）
         run: |
-          task=$(echo "assemble_$FLAVOR_$BUILD_TYPE" | sed -r 's/(_)(.)/\u\2/g')
+          task=$(echo "assemble_${FLAVOR}_${BUILD_TYPE}" | sed -r 's/(_)(.)/\u\2/g')
           echo $task
           ./gradlew $task
 
