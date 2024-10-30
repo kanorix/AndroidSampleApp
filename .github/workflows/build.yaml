@@ -2,7 +2,7 @@ name: Build Android App
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, labeled]
   workflow_dispatch:
     inputs:
       build_type:
@@ -20,6 +20,10 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: |
+      ((github.event.action == 'synchronize') && contains(github.event.pull_request.labels.*.name, 'build-apk')) ||
+      ((github.event.action == 'labeled') && (github.event.label.name == 'build-apk')) ||
+      (github.event_name == 'workflow_dispatch')
     env:
       FLAVOR: prod
       BUILD_TYPE: ${{ inputs.build_type || 'release' }}
